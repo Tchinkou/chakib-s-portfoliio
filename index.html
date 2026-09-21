@@ -1890,6 +1890,39 @@
             }
         }
     </style>
+    
+    <!-- ==== Connexion a Supabase =========================================
+         Colle ici les deux valeurs de ton projet Supabase
+         (Project Settings > API) :
+           - URL du projet, par ex. https://abcdefgh.supabase.co
+           - cle "anon public"
+         La cle anon est PUBLIQUE par nature, elle peut rester dans ce
+         fichier sur GitHub. Ne colle JAMAIS la cle "service_role".
+         Tant que ces deux valeurs sont vides, ou si Supabase ne repond
+         pas, la page affiche le contenu ecrit en dur plus bas : le site
+         marche donc dans tous les cas.
+    -->
+    <script>
+        window.SUPABASE_URL = "https://yxtchigwwuuhrkmreiza.supabase.co";
+        window.SUPABASE_ANON_KEY = "sb_publishable_DmsYN_9vLbdo4CRZQCyRxg_P0Y2_5ap";
+
+        // Compteur de visites GoatCounter. Normalement rempli depuis
+        // l'admin ; cette valeur sert de repli si Supabase ne repond pas.
+        window.GOATCOUNTER_CODE = "";
+    </script>
+
+    <!-- Thema clair/sombre applique avant le premier affichage, pour eviter
+         que la page clignote en blanc chez ceux qui sont en mode sombre. -->
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('theme');
+                if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                }
+            } catch (e) {}
+        })();
+    </script>
 </head>
 <body>
     <div author : Chakib bouaichi></div>
@@ -2546,9 +2579,217 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
     </button>
     
+    <!-- ==== Contenu charge depuis Supabase ================================
+         Ce bloc remplace les projets et les coordonnees ecrits en dur plus
+         haut par ceux enregistres dans Supabase depuis admin.html.
+         S'il n'y a pas de configuration, si le reseau echoue ou si la base
+         est vide, il ne touche a rien : le contenu du fichier reste affiche.
+    -->
+    <script>
+    window.PortfolioData = (function () {
+        'use strict';
+
+        var BASE = (window.SUPABASE_URL || '').replace(/\/+$/, '');
+        var KEY = window.SUPABASE_ANON_KEY || '';
+        var TIMEOUT = 2500; // au-dela, on garde le contenu du fichier
+
+        var api = {
+            settings: {},          // cv_url, email, phone, ...
+            translations: {},      // traductions FR -> EN venues de la base
+            load: load
+        };
+
+        /* ---------- petites aides ---------- */
+
+        // La cle se passe dans l'entete "apikey", que ce soit une ancienne cle
+        // anon (eyJ...) ou une nouvelle cle publiable (sb_publishable_...).
+        // On envoie aussi Authorization, comme le fait la bibliotheque
+        // officielle ; si jamais le serveur la refuse, on rejoue sans.
+        function request(path, apikeyOnly) {
+            var controller = new AbortController();
+            var timer = setTimeout(function () { controller.abort(); }, TIMEOUT);
+            var headers = { apikey: KEY, Accept: 'application/json' };
+            if (!apikeyOnly) headers.Authorization = 'Bearer ' + KEY;
+
+            return fetch(BASE + '/rest/v1/' + path, {
+                headers: headers,
+                signal: controller.signal
+            }).then(function (response) {
+                clearTimeout(timer);
+                if (response.status === 401 && !apikeyOnly) return request(path, true);
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json();
+            });
+        }
+
+        function contactValue(label) {
+            var items = document.querySelectorAll('.contact-info-item');
+            for (var i = 0; i < items.length; i++) {
+                var node = items[i].querySelector('.contact-info-label');
+                if (node && node.textContent.trim().toLowerCase() === label.toLowerCase()) {
+                    return items[i].querySelector('.contact-info-value');
+                }
+            }
+            return null;
+        }
+
+        function setContact(label, value) {
+            var node = contactValue(label);
+            if (node && value) node.textContent = value;
+        }
+
+        function setHref(selector, value) {
+            if (!value) return;
+            document.querySelectorAll(selector).forEach(function (el) {
+                el.setAttribute('href', value);
+            });
+        }
+
+        /* ---------- compteur de visites ---------- */
+
+        function startCounter(code) {
+            code = (code || window.GOATCOUNTER_CODE || '').trim();
+            if (!code || document.querySelector('script[data-goatcounter]')) return;
+            var script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://gc.zgo.at/count.js';
+            script.setAttribute('data-goatcounter', 'https://' + code + '.goatcounter.com/count');
+            document.head.appendChild(script);
+        }
+
+        /* ---------- coordonnees, CV, reseaux ---------- */
+
+        function applySettings(rows) {
+            var map = {};
+            rows.forEach(function (row) { map[row.key] = row.value; });
+            api.settings = map;
+
+            setHref('.about-cv-link', map.cv_url);
+
+            setContact('Email', map.email);
+            setContact('Téléphone', map.phone);
+            setContact('Localisation', map.location);
+            setContact('Université', map.university);
+
+            if (map.location && map.location_en) api.translations[map.location] = map.location_en;
+            if (map.university && map.university_en) api.translations[map.university] = map.university_en;
+
+            var whatsapp = (map.whatsapp || '').replace(/[^0-9]/g, '');
+            if (whatsapp) setHref('a[href^="https://wa.me/"]', 'https://wa.me/' + whatsapp);
+
+            setHref('a[aria-label="LinkedIn"]', map.linkedin);
+            setHref('a[aria-label="Instagram"]', map.instagram);
+
+            startCounter(map.goatcounter);
+        }
+
+        /* ---------- projets ---------- */
+
+        var COLORS = ['blue', 'amber', 'purple', 'green'];
+
+        function buildCard(row) {
+            var color = COLORS.indexOf(row.tag_color) === -1 ? 'blue' : row.tag_color;
+
+            var card = document.createElement('div');
+            card.className = 'project-card reveal';
+            card.setAttribute('data-category', row.category || 'web');
+
+            var imageBox = document.createElement('div');
+            imageBox.className = 'project-image-container';
+
+            var image = document.createElement('img');
+            image.className = 'project-image';
+            image.setAttribute('src', row.image_url || '');
+            image.setAttribute('alt', row.title || '');
+            imageBox.appendChild(image);
+
+            var overlay = document.createElement('div');
+            overlay.className = 'project-image-overlay';
+            var watermark = document.createElement('span');
+            watermark.className = 'project-watermark';
+            watermark.textContent = '© Chakib 2025';
+            overlay.appendChild(watermark);
+            imageBox.appendChild(overlay);
+            card.appendChild(imageBox);
+
+            var content = document.createElement('div');
+            content.className = 'project-content';
+
+            var tag = document.createElement('span');
+            tag.className = 'project-tag bg-' + color + '-100 text-' + color + '-800';
+            tag.textContent = row.tag || '';
+            content.appendChild(tag);
+
+            var title = document.createElement('h3');
+            title.className = 'project-title';
+            title.textContent = row.title || '';
+            content.appendChild(title);
+
+            var description = document.createElement('p');
+            description.className = 'project-description';
+            description.textContent = row.description || '';
+            content.appendChild(description);
+
+            if (row.link_url) {
+                var link = document.createElement('a');
+                link.className = 'project-link';
+                link.setAttribute('href', row.link_url);
+                link.setAttribute('target', '_blank');
+                link.setAttribute('rel', 'noopener');
+                link.textContent = row.link_label || 'Voir le site';
+                content.appendChild(link);
+            }
+
+            card.appendChild(content);
+            return card;
+        }
+
+        function applyProjects(rows) {
+            if (!rows || rows.length === 0) return; // base vide : on garde le contenu du fichier
+            var grid = document.getElementById('projects-grid');
+            if (!grid) return;
+
+            grid.textContent = '';
+            rows.forEach(function (row) {
+                grid.appendChild(buildCard(row));
+                if (row.title && row.title_en) api.translations[row.title] = row.title_en;
+                if (row.description && row.description_en) api.translations[row.description] = row.description_en;
+                if (row.tag && row.tag_en) api.translations[row.tag] = row.tag_en;
+            });
+        }
+
+        /* ---------- chargement ---------- */
+
+        function load() {
+            if (!BASE || !KEY) {
+                startCounter('');
+                return Promise.resolve();
+            }
+            return Promise.all([
+                request('site_settings?select=key,value'),
+                request('projects?select=*&order=position.asc,created_at.asc')
+            ]).then(function (results) {
+                applySettings(results[0]);
+                applyProjects(results[1]);
+            }).catch(function (error) {
+                console.warn('Supabase injoignable, le contenu du fichier est conserve.', error);
+                startCounter('');
+            });
+        }
+
+        return api;
+    })();
+    </script>
+
     <script>
         // Theme Toggle
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
+            // On attend le contenu de Supabase avant de brancher le reste,
+            // pour que filtres, traduction et animations voient les vraies
+            // cartes de projets. En cas d'echec, on continue avec celles
+            // ecrites dans le fichier.
+            await window.PortfolioData.load();
+            
             // Theme management
             const themeToggle = document.getElementById('theme-toggle');
             const moonIcon = document.getElementById('theme-icon-moon');
@@ -2711,6 +2952,9 @@
                 "Portrait de Chakib": "Portrait of Chakib",
                 "Me contacter sur WhatsApp": "Contact me on WhatsApp"
             };
+            
+            // Traductions des projets et coordonnees venus de Supabase.
+            Object.assign(translations, window.PortfolioData.translations);
             
             const languageToggle = document.getElementById('language-toggle');
             const currentLanguage = document.getElementById('current-language');
@@ -2933,7 +3177,8 @@
                 `);
                 
                 // Open user's mail client
-                window.open(`mailto:bouaichichakib8@gmail.com?subject=${mailtoSubject}&body=${mailtoBody}`, '_blank');
+                const contactEmail = window.PortfolioData.settings.email || 'bouaichichakib8@gmail.com';
+                window.open(`mailto:${contactEmail}?subject=${mailtoSubject}&body=${mailtoBody}`, '_blank');
                 
                 // Reset form
                 contactForm.reset();
