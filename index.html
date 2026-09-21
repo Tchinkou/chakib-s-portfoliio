@@ -1752,8 +1752,8 @@
         /* Scroll to Top Button */
         .scroll-top {
             position: fixed;
-            bottom: 2rem;
-            right: 2rem;
+            bottom: 6rem;   /* au-dessus du bouton de l'assistant */
+            right: 2.375rem;
             z-index: 40;
             display: flex;
             align-items: center;
@@ -1783,6 +1783,261 @@
             background-color: #0F766E;
         }
         
+        /* ---- Champ piege anti-robot : invisible pour un humain, rempli par
+               les robots a spam, qui remplissent tout ce qu'ils trouvent. ---- */
+        .form-trap {
+            position: absolute;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        .form-status {
+            margin-top: 0.75rem;
+            font-size: 0.875rem;
+            min-height: 1.25rem;
+            color: #6b7280;
+        }
+
+        .form-status.ok { color: #15803d; }
+        .form-status.error { color: #b91c1c; }
+        .dark .form-status { color: #9ca3af; }
+        .dark .form-status.ok { color: #6ee7b7; }
+        .dark .form-status.error { color: #fca5a5; }
+
+        /* ---- Assistant du portfolio ---- */
+        .chat-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 45;
+            width: 3.25rem;
+            height: 3.25rem;
+            border: none;
+            border-radius: 9999px;
+            background-color: #0D9488;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.45);
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .chat-toggle:hover {
+            background-color: #0F766E;
+            transform: translateY(-2px);
+        }
+
+        .dark .chat-toggle { background-color: #14B8A6; }
+        .chat-toggle .chat-icon-close { display: none; }
+        .chat-toggle.open .chat-icon-open { display: none; }
+        .chat-toggle.open .chat-icon-close { display: block; }
+
+        .chat-badge {
+            position: absolute;
+            top: -0.15rem;
+            right: -0.15rem;
+            width: 0.85rem;
+            height: 0.85rem;
+            border-radius: 9999px;
+            background-color: #F59E0B;
+            border: 2px solid white;
+        }
+
+        .dark .chat-badge { border-color: #1a1a1a; }
+        .chat-toggle.open .chat-badge, .chat-toggle.seen .chat-badge { display: none; }
+
+        .chat-panel {
+            position: fixed;
+            bottom: 6.5rem;
+            right: 2rem;
+            z-index: 45;
+            display: flex;
+            flex-direction: column;
+            width: 22rem;
+            max-width: calc(100vw - 2.5rem);
+            height: 30rem;
+            max-height: calc(100vh - 9.5rem);
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 1rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(0.75rem) scale(0.98);
+            pointer-events: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .chat-panel.open {
+            opacity: 1;
+            transform: none;
+            pointer-events: auto;
+        }
+
+        .dark .chat-panel {
+            background-color: #2D2D2D;
+            border-color: #4b5563;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            padding: 0.875rem 1rem;
+            background-color: #0D9488;
+            color: white;
+            flex: none;
+        }
+
+        .dark .chat-header { background-color: #0F766E; }
+        .chat-header-title { font-weight: 600; font-size: 0.9375rem; }
+        .chat-header-subtitle { font-size: 0.75rem; opacity: 0.85; }
+        .chat-header-text { flex: 1; min-width: 0; }
+
+        .chat-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 0.375rem;
+            display: flex;
+            opacity: 0.85;
+        }
+
+        .chat-close:hover { opacity: 1; background-color: rgba(255, 255, 255, 0.15); }
+
+        .chat-log {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.625rem;
+            background-color: #f9fafb;
+        }
+
+        .dark .chat-log { background-color: #1f1f1f; }
+
+        .chat-bubble {
+            max-width: 85%;
+            padding: 0.625rem 0.875rem;
+            border-radius: 0.875rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .chat-bubble.bot {
+            align-self: flex-start;
+            background-color: white;
+            color: #1f2937;
+            border: 1px solid #e5e7eb;
+            border-bottom-left-radius: 0.25rem;
+        }
+
+        .dark .chat-bubble.bot {
+            background-color: #2D2D2D;
+            color: #e5e7eb;
+            border-color: #4b5563;
+        }
+
+        .chat-bubble.me {
+            align-self: flex-end;
+            background-color: #0D9488;
+            color: white;
+            border-bottom-right-radius: 0.25rem;
+        }
+
+        .dark .chat-bubble.me { background-color: #14B8A6; color: #06201d; }
+
+        .chat-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.375rem;
+            padding: 0 1rem 0.75rem;
+            background-color: #f9fafb;
+            flex: none;
+        }
+
+        .dark .chat-actions { background-color: #1f1f1f; }
+
+        .chat-chip {
+            font-size: 0.75rem;
+            padding: 0.3125rem 0.625rem;
+            border-radius: 9999px;
+            border: 1px solid #0D9488;
+            background-color: transparent;
+            color: #0D9488;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .chat-chip:hover { background-color: #0D9488; color: white; }
+        .dark .chat-chip { border-color: #14B8A6; color: #14B8A6; }
+        .dark .chat-chip:hover { background-color: #14B8A6; color: #06201d; }
+
+        .chat-form {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border-top: 1px solid #e5e7eb;
+            background-color: white;
+            flex: none;
+        }
+
+        .dark .chat-form { background-color: #2D2D2D; border-color: #4b5563; }
+
+        .chat-input {
+            flex: 1;
+            min-width: 0;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-family: inherit;
+            color: #1f2937;
+            background-color: white;
+        }
+
+        .dark .chat-input { border-color: #4b5563; background-color: #1f1f1f; color: #e5e7eb; }
+        .chat-input:focus { outline: none; border-color: #0D9488; }
+
+        .chat-send {
+            flex: none;
+            width: 2.25rem;
+            height: 2.25rem;
+            border: none;
+            border-radius: 9999px;
+            background-color: #0D9488;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-send:hover { background-color: #0F766E; }
+        .dark .chat-send { background-color: #14B8A6; }
+
+        @media (max-width: 480px) {
+            .scroll-top { bottom: 5rem; right: 1.625rem; }
+            .chat-toggle { bottom: 1.25rem; right: 1.25rem; }
+            .chat-panel {
+                right: 0.75rem;
+                left: 0.75rem;
+                width: auto;
+                bottom: 5.25rem;
+                height: 68vh;
+            }
+        }
+
         /* Reveal animations */
         .reveal {
             opacity: 0;
@@ -2520,8 +2775,8 @@
                         </div>
                         
                         <div class="form-group mb-4">
-                            <label for="subject" class="form-label">Sujet</label>
-                            <input type="text" id="subject" name="subject" class="form-input" placeholder="Sujet de votre message" required>
+                            <label for="subject" class="form-label">Sujet (facultatif)</label>
+                            <input type="text" id="subject" name="subject" class="form-input" placeholder="Sujet de votre message">
                         </div>
                         
                         <div class="form-group mb-4">
@@ -2529,7 +2784,13 @@
                             <textarea id="message" name="message" class="form-textarea" placeholder="Votre message" required></textarea>
                         </div>
                         
+                        <div class="form-trap" aria-hidden="true">
+                            <label for="site-web">Laisse ce champ vide</label>
+                            <input type="text" id="site-web" name="site-web" tabindex="-1" autocomplete="off">
+                        </div>
+                        
                         <button type="submit" class="form-button">Envoyer le message</button>
+                        <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
                     </form>
                 </div>
             </div>
@@ -2574,6 +2835,36 @@
         </div>
     </footer>
     
+    <!-- Assistant du portfolio : repond aux questions courantes a partir du
+         contenu de la page, et renvoie vers le formulaire quand il ne sait pas. -->
+    <button class="chat-toggle" id="chat-toggle" aria-label="Ouvrir l'assistant" aria-expanded="false">
+        <span class="chat-badge" id="chat-badge"></span>
+        <svg class="chat-icon-open" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <svg class="chat-icon-close" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+    </button>
+    
+    <div class="chat-panel" id="chat-panel" role="dialog" aria-label="Assistant du portfolio">
+        <div class="chat-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="8" rx="2"/><path d="M12 8V5"/><circle cx="12" cy="4" r="1"/><path d="M8 13h.01"/><path d="M16 13h.01"/><path d="M9 17h6"/></svg>
+            <span class="chat-header-text">
+                <span class="chat-header-title">Assistant</span><br>
+                <span class="chat-header-subtitle">Pose-moi une question sur Chakib</span>
+            </span>
+            <button class="chat-close" id="chat-close" aria-label="Fermer l'assistant">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="chat-log" id="chat-log"></div>
+        <div class="chat-actions" id="chat-actions"></div>
+        <form class="chat-form" id="chat-form">
+            <input type="text" class="chat-input" id="chat-input" autocomplete="off"
+                   placeholder="Écris ta question…" aria-label="Ta question" maxlength="300">
+            <button type="submit" class="chat-send" aria-label="Envoyer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 14-7-7 14-2-5z"/></svg>
+            </button>
+        </form>
+    </div>
+    
     <!-- Scroll to Top Button -->
     <button class="scroll-top" id="scroll-top" aria-label="Retour en haut">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
@@ -2596,8 +2887,42 @@
         var api = {
             settings: {},          // cv_url, email, phone, ...
             translations: {},      // traductions FR -> EN venues de la base
-            load: load
+            configured: !!(BASE && KEY),
+            load: load,
+            sendMessage: sendMessage
         };
+
+        // Depot d'un message de contact. Le visiteur n'a le droit que d'ecrire :
+        // impossible pour lui de relire la boite de reception (voir supabase.sql).
+        function sendMessage(payload, apikeyOnly) {
+            if (!BASE || !KEY) return Promise.reject(new Error('non configure'));
+
+            var headers = {
+                apikey: KEY,
+                'Content-Type': 'application/json',
+                Prefer: 'return=minimal'
+            };
+            if (!apikeyOnly) headers.Authorization = 'Bearer ' + KEY;
+
+            return fetch(BASE + '/rest/v1/messages', {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(payload)
+            }).then(function (response) {
+                if (response.status === 401 && !apikeyOnly) return sendMessage(payload, true);
+                if (response.ok) return true;
+                return response.text().then(function (text) {
+                    var message = text;
+                    try {
+                        var parsed = JSON.parse(text);
+                        message = parsed.message || parsed.hint || text;
+                    } catch (e) {}
+                    var error = new Error(message || ('HTTP ' + response.status));
+                    error.status = response.status;
+                    throw error;
+                });
+            });
+        }
 
         /* ---------- petites aides ---------- */
 
@@ -2638,10 +2963,27 @@
             if (node && value) node.textContent = value;
         }
 
+        // Ceinture et bretelles : seul l'admin connecte peut ecrire dans la
+        // base, mais on refuse quand meme toute adresse qui n'est pas un vrai
+        // lien. Une adresse « javascript: » posee dans un href s'executerait
+        // chez chaque visiteur.
+        function safeUrl(value) {
+            var url = (value || '').trim();
+            if (!url) return '';
+            return /^(https?:\/\/|mailto:|tel:|\/|\.\/|#)/i.test(url) ? url : '';
+        }
+
+        function safeImage(value) {
+            var url = (value || '').trim();
+            if (!url) return '';
+            return /^(https?:\/\/|data:image\/|\/|\.\/)/i.test(url) ? url : '';
+        }
+
         function setHref(selector, value) {
-            if (!value) return;
+            var url = safeUrl(value);
+            if (!url) return;
             document.querySelectorAll(selector).forEach(function (el) {
-                el.setAttribute('href', value);
+                el.setAttribute('href', url);
             });
         }
 
@@ -2699,7 +3041,7 @@
 
             var image = document.createElement('img');
             image.className = 'project-image';
-            image.setAttribute('src', row.image_url || '');
+            image.setAttribute('src', safeImage(row.image_url));
             image.setAttribute('alt', row.title || '');
             imageBox.appendChild(image);
 
@@ -2730,10 +3072,11 @@
             description.textContent = row.description || '';
             content.appendChild(description);
 
-            if (row.link_url) {
+            var projectUrl = safeUrl(row.link_url);
+            if (projectUrl) {
                 var link = document.createElement('a');
                 link.className = 'project-link';
-                link.setAttribute('href', row.link_url);
+                link.setAttribute('href', projectUrl);
                 link.setAttribute('target', '_blank');
                 link.setAttribute('rel', 'noopener');
                 link.textContent = row.link_label || 'Voir le site';
@@ -2933,6 +3276,7 @@
                 "Réseaux Sociaux": "Social Networks",
                 "Envoyez-moi un message": "Send me a message",
                 "Nom": "Name",
+                "Sujet (facultatif)": "Subject (optional)",
                 "Sujet": "Subject",
                 "Message": "Message",
                 "Envoyer le message": "Send message",
@@ -2950,7 +3294,17 @@
                 "Ouvrir le menu": "Open menu",
                 "Retour en haut": "Back to top",
                 "Portrait de Chakib": "Portrait of Chakib",
-                "Me contacter sur WhatsApp": "Contact me on WhatsApp"
+                "Me contacter sur WhatsApp": "Contact me on WhatsApp",
+                
+                // Assistant et formulaire
+                "Assistant": "Assistant",
+                "Pose-moi une question sur Chakib": "Ask me about Chakib",
+                "Ouvrir l'assistant": "Open the assistant",
+                "Fermer l'assistant": "Close the assistant",
+                "Écris ta question…": "Ask your question…",
+                "Ta question": "Your question",
+                "Envoyer": "Send",
+                "Laisse ce champ vide": "Leave this field empty"
             };
             
             // Traductions des projets et coordonnees venus de Supabase.
@@ -3157,38 +3511,495 @@
             
             // Contact form submission
             const contactForm = document.getElementById('contact-form');
-            
+            const formStatus = document.getElementById('form-status');
+            const formButton = contactForm.querySelector('.form-button');
+            const formTrap = document.getElementById('site-web');
+
+            function setFormStatus(text, kind) {
+                formStatus.textContent = text || '';
+                formStatus.className = 'form-status' + (kind ? ' ' + kind : '');
+            }
+
+            // Dernier recours si Supabase ne repond pas : on n'avale jamais le
+            // message du visiteur, on lui ouvre sa messagerie.
+            function fallbackToMail(name, email, subject, message) {
+                const address = window.PortfolioData.settings.email || 'bouaichichakib8@gmail.com';
+                const mailSubject = encodeURIComponent(subject);
+                const mailBody = encodeURIComponent(
+                    'Nom: ' + name + '\n' +
+                    'Email: ' + email + '\n\n' +
+                    'Message:\n' + message);
+                window.open('mailto:' + address + '?subject=' + mailSubject + '&body=' + mailBody, '_blank');
+            }
+
+            // On efface le message precedent des que le visiteur retape
+            // quelque chose, sinon un « Message envoye » d'il y a deux
+            // minutes reste affiche pendant qu'il ecrit le suivant.
+            contactForm.addEventListener('input', function() {
+                if (formStatus.textContent) setFormStatus('');
+            });
+
             contactForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const subject = document.getElementById('subject').value;
-                const message = document.getElementById('message').value;
-                
-                // Construct mailto link
-                const mailtoSubject = encodeURIComponent(subject);
-                const mailtoBody = encodeURIComponent(`
-                    Nom: ${name}
-                    Email: ${email}
-                    
-                    Message:
-                    ${message}
-                `);
-                
-                // Open user's mail client
-                const contactEmail = window.PortfolioData.settings.email || 'bouaichichakib8@gmail.com';
-                window.open(`mailto:${contactEmail}?subject=${mailtoSubject}&body=${mailtoBody}`, '_blank');
-                
-                // Reset form
-                contactForm.reset();
-                
-                // You could add a success message here
-                alert(language === 'EN'
-                    ? 'Your message has been prepared in your email application.'
-                    : 'Votre message a été préparé dans votre application de messagerie.');
+
+                // Le champ piege est invisible : s'il est rempli, c'est un robot.
+                // On fait mine d'accepter pour ne pas lui apprendre qu'il est repere.
+                if (formTrap && formTrap.value) {
+                    contactForm.reset();
+                    setFormStatus(language === 'EN' ? 'Message sent. Thanks!' : 'Message envoyé. Merci !', 'ok');
+                    return;
+                }
+
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const subject = document.getElementById('subject').value.trim();
+                const message = document.getElementById('message').value.trim();
+
+                if (!name || !email || !message) {
+                    setFormStatus(language === 'EN'
+                        ? 'Please fill in your name, your email and your message.'
+                        : 'Remplis ton nom, ton email et ton message.', 'error');
+                    return;
+                }
+                if (message.length > 5000) {
+                    setFormStatus(language === 'EN'
+                        ? 'Your message is too long (5000 characters maximum).'
+                        : 'Ton message est trop long (5000 caractères maximum).', 'error');
+                    return;
+                }
+
+                formButton.disabled = true;
+                setFormStatus(language === 'EN' ? 'Sending…' : 'Envoi en cours…');
+
+                window.PortfolioData.sendMessage({
+                    name: name.slice(0, 120),
+                    email: email.slice(0, 200),
+                    subject: subject.slice(0, 200) || null,
+                    body: message,
+                    source: 'formulaire'
+                }).then(function() {
+                    contactForm.reset();
+                    setFormStatus(language === 'EN'
+                        ? 'Message sent. Chakib will get back to you.'
+                        : 'Message envoyé. Chakib te répondra.', 'ok');
+                }).catch(function(error) {
+                    // Trop de messages d'un coup : c'est le garde-fou de la base.
+                    if (error && /Trop de messages/i.test(error.message || '')) {
+                        setFormStatus(language === 'EN'
+                            ? 'Too many messages right now. Please try again in a few minutes.'
+                            : 'Trop de messages viennent d’être envoyés. Réessaie dans quelques minutes.', 'error');
+                        return;
+                    }
+                    fallbackToMail(name, email, subject, message);
+                    setFormStatus(language === 'EN'
+                        ? 'Direct sending failed, so your email app just opened instead.'
+                        : 'L’envoi direct a échoué, ta messagerie vient de s’ouvrir à la place.', 'error');
+                }).then(function() {
+                    formButton.disabled = false;
+                });
             });
-            
+
+            /* ==== Assistant du portfolio =================================
+               Il ne devine rien et n'invente rien : il relit le contenu de la
+               page (projets, competences, formation, coordonnees) et repond a
+               partir de ca. Il suit donc automatiquement les modifications
+               faites depuis l'admin. Quand il ne reconnait pas la question, il
+               renvoie vers le formulaire de contact.
+               Tout est ecrit avec textContent : un message ne peut jamais
+               injecter de code dans la page.
+            ============================================================== */
+            (function () {
+                const toggle = document.getElementById('chat-toggle');
+                const panel = document.getElementById('chat-panel');
+                const log = document.getElementById('chat-log');
+                const actionBar = document.getElementById('chat-actions');
+                const chatForm = document.getElementById('chat-form');
+                const chatInput = document.getElementById('chat-input');
+                const chatClose = document.getElementById('chat-close');
+                if (!toggle || !panel || !log) return;
+
+                let misses = 0;
+                let greeted = false;
+
+                const english = () => language === 'EN';
+                const pick = (fr, en) => (english() ? en : fr);
+
+                /* ---- lecture de la page ---- */
+
+                function tidy(root, selector) {
+                    const el = selector ? root.querySelector(selector) : root;
+                    return el ? el.textContent.replace(/\s+/g, ' ').trim() : '';
+                }
+
+                function plain(text) {
+                    return (text || '')
+                        .toLowerCase()
+                        .normalize('NFD').replace(/[̀-ͯ]/g, '')
+                        .replace(/[^a-z0-9]+/g, ' ')
+                        .trim();
+                }
+
+                function readProjects() {
+                    return Array.from(document.querySelectorAll('#projects-grid .project-card')).map(card => {
+                        const link = card.querySelector('.project-link');
+                        return {
+                            title: tidy(card, '.project-title'),
+                            description: tidy(card, '.project-description'),
+                            tag: tidy(card, '.project-tag'),
+                            url: link ? link.getAttribute('href') : ''
+                        };
+                    }).filter(p => p.title);
+                }
+
+                function readSkills() {
+                    return Array.from(document.querySelectorAll('.skill-item')).map(item => ({
+                        name: tidy(item, '.skill-name'),
+                        level: tidy(item, '.skill-level')
+                    })).filter(s => s.name);
+                }
+
+                function readColumn(keywords) {
+                    const columns = Array.from(document.querySelectorAll('.education-column')).map(column => ({
+                        heading: tidy(column, '.education-category-title'),
+                        items: Array.from(column.querySelectorAll('.timeline-item')).map(item => ({
+                            date: tidy(item, '.timeline-date'),
+                            title: tidy(item, '.timeline-title'),
+                            place: tidy(item, '.timeline-institution')
+                        })).filter(i => i.title)
+                    }));
+                    return columns.find(c => keywords.some(k => plain(c.heading).includes(k))) || null;
+                }
+
+                function contactValue(labels) {
+                    const items = document.querySelectorAll('.contact-info-item');
+                    for (let i = 0; i < items.length; i++) {
+                        const label = plain(tidy(items[i], '.contact-info-label'));
+                        if (labels.some(l => label === plain(l))) {
+                            return tidy(items[i], '.contact-info-value');
+                        }
+                    }
+                    return '';
+                }
+
+                function listLines(items) {
+                    return items.map(i =>
+                        '• ' + i.title +
+                        (i.place ? ' — ' + i.place : '') +
+                        (i.date ? ' (' + i.date + ')' : '')).join('\n');
+                }
+
+                /* ---- affichage ---- */
+
+                function bubble(who, text, links) {
+                    const el = document.createElement('div');
+                    el.className = 'chat-bubble ' + who;
+                    el.textContent = text;
+                    (links || []).forEach(link => {
+                        // Jamais d'adresse javascript: ni de schema exotique.
+                        if (!link.url || !/^(https?:|mailto:|tel:)/i.test(link.url)) return;
+                        el.appendChild(document.createElement('br'));
+                        const anchor = document.createElement('a');
+                        anchor.href = link.url;
+                        anchor.textContent = link.label;
+                        anchor.target = '_blank';
+                        anchor.rel = 'noopener noreferrer';
+                        anchor.style.color = 'inherit';
+                        anchor.style.textDecoration = 'underline';
+                        el.appendChild(anchor);
+                    });
+                    log.appendChild(el);
+                    log.scrollTop = log.scrollHeight;
+                }
+
+                function chips(list) {
+                    actionBar.textContent = '';
+                    (list || []).forEach(item => {
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.className = 'chat-chip';
+                        button.textContent = item.label;
+                        button.addEventListener('click', () => {
+                            if (item.run) { item.run(); return; }
+                            ask(item.label);
+                        });
+                        actionBar.appendChild(button);
+                    });
+                }
+
+                function goToContact() {
+                    closePanel();
+                    const section = document.getElementById('contact');
+                    if (section) section.scrollIntoView({ behavior: 'smooth' });
+                    setTimeout(() => {
+                        const field = document.getElementById('name');
+                        if (field) field.focus({ preventScroll: true });
+                    }, 700);
+                }
+
+                function writeChip() {
+                    return { label: pick('Écrire à Chakib', 'Write to Chakib'), run: goToContact };
+                }
+
+                function defaultChips() {
+                    chips([
+                        { label: pick('Ses projets', 'His projects') },
+                        { label: pick('Ses compétences', 'His skills') },
+                        { label: pick('Son CV', 'His CV') },
+                        { label: pick('Le contacter', 'Contact him') }
+                    ]);
+                }
+
+                /* ---- comprehension ---- */
+
+                const INTENTS = [
+                    ['salutation', ['bonjour', 'salut', 'coucou', 'bonsoir', 'hello', 'hi', 'hey', 'yo']],
+                    ['projets', ['projet', 'projets', 'realisation', 'realisations', 'travaux', 'portfolio',
+                                 'project', 'projects', 'realisations', 'site', 'sites', 'application', 'applications']],
+                    ['competences', ['competence', 'competences', 'skill', 'skills', 'technologie', 'technologies',
+                                     'techno', 'langage', 'langages', 'maitrise', 'outil', 'outils', 'logiciel',
+                                     'logiciels', 'stack', 'sait faire', 'capable']],
+                    ['formation', ['formation', 'formations', 'etude', 'etudes', 'diplome', 'diplomes', 'universite',
+                                   'master', 'licence', 'ecole', 'education', 'study', 'studies', 'degree',
+                                   'university', 'academique', 'academic', 'certification', 'certifications']],
+                    ['experience', ['experience', 'experiences', 'travaille', 'travaille', 'emploi', 'poste',
+                                    'postes', 'job', 'carriere', 'stage', 'parcours professionnel', 'career']],
+                    ['contact', ['contact', 'contacter', 'joindre', 'ecrire', 'mail', 'email', 'telephone',
+                                 'numero', 'phone', 'whatsapp', 'appeler', 'reach', 'message', 'coordonnees']],
+                    ['cv', ['cv', 'resume', 'curriculum']],
+                    ['lieu', ['habite', 'ville', 'situe', 'localisation', 'location', 'where', 'based', 'bejaia',
+                              'algerie', 'algeria', 'pays', 'country', 'adresse']],
+                    ['langues', ['langue', 'langues', 'anglais', 'francais', 'arabe', 'kabyle', 'english',
+                                 'french', 'arabic', 'language', 'languages', 'parle']],
+                    ['apropos', ['qui est', 'qui es', 'presente', 'presentation', 'about', 'parle moi', 'age',
+                                 'yourself', 'background', 'bio']],
+                    ['disponibilite', ['disponible', 'disponibilite', 'recrute', 'recruter', 'embauche', 'embaucher',
+                                       'freelance', 'mission', 'collaborer', 'available', 'hire', 'hiring',
+                                       'devis', 'tarif', 'prix', 'budget', 'travailler avec']],
+                    ['merci', ['merci', 'thanks', 'thank']],
+                    ['aurevoir', ['au revoir', 'revoir', 'bye', 'ciao', 'goodbye']]
+                ];
+
+                // Les mots tres courts ne valent que comme mot entier, sinon "hi"
+                // declencherait sur "machin" et "ou" sur "pourquoi".
+                function contains(question, word) {
+                    if (word.length <= 3) return question.split(' ').indexOf(word) !== -1;
+                    return question.indexOf(word) !== -1;
+                }
+
+                function respond(question) {
+                    const q = plain(question);
+                    if (!q) return null;
+
+                    const projects = readProjects();
+                    const skills = readSkills();
+
+                    // Une question sur un projet nomme ?
+                    const named = projects.find(p => plain(p.title).length > 3 && q.includes(plain(p.title)));
+                    if (named) {
+                        return {
+                            text: named.title + (named.tag ? ' — ' + named.tag : '') +
+                                  (named.description ? '\n' + named.description : ''),
+                            links: named.url ? [{ label: pick('Voir le projet', 'View the project'), url: named.url }] : []
+                        };
+                    }
+
+                    // Une question sur une competence nommee ?
+                    const skill = skills.find(s => plain(s.name).length > 2 && q.includes(plain(s.name)));
+                    if (skill) {
+                        return { text: pick(
+                            'Oui, ' + skill.name + ' fait partie de ses compétences, niveau ' + skill.level + '.',
+                            'Yes, ' + skill.name + ' is one of his skills, at ' + skill.level + '.') };
+                    }
+
+                    let best = null;
+                    let bestScore = 0;
+                    INTENTS.forEach(entry => {
+                        const score = entry[1].reduce((n, w) => n + (contains(q, w) ? 1 : 0), 0);
+                        if (score > bestScore) { bestScore = score; best = entry[0]; }
+                    });
+                    if (!best) return null;
+                    return build(best, projects, skills);
+                }
+
+                function build(id, projects, skills) {
+                    switch (id) {
+
+                        case 'salutation':
+                            return { text: pick(
+                                'Salut ! Je réponds aux questions sur le portfolio de Chakib : ses projets, ses compétences, sa formation, ses coordonnées.',
+                                'Hi! I answer questions about Chakib’s portfolio: his projects, his skills, his background, his contact details.') };
+
+                        case 'projets': {
+                            if (!projects.length) return null;
+                            return {
+                                text: pick('Il a ' + projects.length + ' projets en ligne :\n',
+                                           'He has ' + projects.length + ' projects online:\n') +
+                                      projects.map(p => '• ' + p.title).join('\n') +
+                                      pick('\n\nDis-moi lequel t’intéresse.',
+                                           '\n\nTell me which one you want to hear about.'),
+                                chips: projects.slice(0, 4).map(p => ({ label: p.title }))
+                            };
+                        }
+
+                        case 'competences': {
+                            if (!skills.length) return null;
+                            return { text: pick('Ses compétences : ', 'His skills: ') +
+                                           skills.map(s => s.name + ' (' + s.level + ')').join(', ') + '.' };
+                        }
+
+                        case 'formation': {
+                            const academic = readColumn(['parcours', 'academique', 'academic']);
+                            const training = readColumn(['certification', 'formations', 'training']);
+                            const blocks = [];
+                            if (academic && academic.items.length) {
+                                blocks.push(pick('Parcours académique :\n', 'Academic background:\n') + listLines(academic.items));
+                            }
+                            if (training && training.items.length) {
+                                blocks.push(pick('Formations et certifications :\n', 'Training and certifications:\n') + listLines(training.items));
+                            }
+                            if (!blocks.length) return null;
+                            return { text: blocks.join('\n\n') };
+                        }
+
+                        case 'experience': {
+                            const column = readColumn(['experience', 'professionnelle', 'professional']);
+                            if (!column || !column.items.length) return null;
+                            return { text: pick('Ses expériences :\n', 'His experience:\n') + listLines(column.items) };
+                        }
+
+                        case 'contact': {
+                            const email = contactValue(['Email', 'E-mail']);
+                            const phone = contactValue(['Téléphone', 'Phone']);
+                            const whatsapp = document.querySelector('a[href^="https://wa.me/"]');
+                            const lines = [];
+                            if (email) lines.push(pick('Email : ', 'Email: ') + email);
+                            if (phone) lines.push(pick('Téléphone : ', 'Phone: ') + phone);
+                            return {
+                                text: (lines.length ? lines.join('\n') + '\n\n' : '') +
+                                      pick('Tu peux aussi lui laisser un message depuis le site, il arrive directement chez lui.',
+                                           'You can also leave him a message from the site, it reaches him directly.'),
+                                links: whatsapp ? [{ label: 'WhatsApp', url: whatsapp.getAttribute('href') }] : [],
+                                chips: [{ label: pick('Ouvrir le formulaire', 'Open the form'), run: goToContact }]
+                            };
+                        }
+
+                        case 'cv': {
+                            const cv = document.querySelector('.about-cv-link');
+                            if (!cv) return null;
+                            return {
+                                text: pick('Son CV est téléchargeable depuis le site.',
+                                           'His CV can be downloaded from the site.'),
+                                links: [{ label: pick('Télécharger le CV', 'Download the CV'), url: cv.getAttribute('href') }]
+                            };
+                        }
+
+                        case 'lieu': {
+                            const place = contactValue(['Localisation', 'Location']);
+                            const school = contactValue(['Université', 'University']);
+                            if (!place && !school) return null;
+                            const parts = [];
+                            if (place) parts.push(pick('Il est basé à ', 'He is based in ') + place + '.');
+                            if (school) parts.push(pick('Son université : ', 'His university: ') + school + '.');
+                            return { text: parts.join('\n') };
+                        }
+
+                        case 'langues': {
+                            const words = ['francais', 'anglais', 'arabe', 'kabyle', 'french', 'english', 'arabic', 'tcf'];
+                            const found = skills.filter(s => words.some(w => plain(s.name).includes(w)));
+                            if (!found.length) return null;
+                            return { text: pick('Côté langues : ', 'Languages: ') +
+                                           found.map(s => s.name + ' (' + s.level + ')').join(', ') + '.' };
+                        }
+
+                        case 'apropos': {
+                            const about = document.querySelector('.about-text');
+                            if (!about) return null;
+                            return { text: tidy(about) };
+                        }
+
+                        case 'disponibilite':
+                            return {
+                                text: pick(
+                                    'Il travaille en freelance, en développement web et en design. Pour une demande précise, le mieux est de lui écrire : il répond lui-même.',
+                                    'He works as a freelancer, in web development and design. For anything specific, write to him: he answers himself.'),
+                                chips: [writeChip()]
+                            };
+
+                        case 'merci':
+                            return { text: pick('Avec plaisir ! Autre chose ?', 'You’re welcome! Anything else?') };
+
+                        case 'aurevoir':
+                            return { text: pick('À bientôt !', 'See you!') };
+
+                        default:
+                            return null;
+                    }
+                }
+
+                function fallback() {
+                    misses += 1;
+                    bubble('bot', misses >= 2
+                        ? pick('Là je ne sais pas répondre. Écris directement à Chakib, il te répondra lui-même.',
+                               'I don’t know the answer to that. Write to Chakib directly, he will answer you himself.')
+                        : pick('Je n’ai pas compris. Je sais parler de ses projets, ses compétences, sa formation et ses coordonnées. Pour le reste, écris-lui directement.',
+                               'I didn’t understand. I can talk about his projects, his skills, his background and his contact details. For anything else, write to him directly.'));
+                    chips([
+                        writeChip(),
+                        { label: pick('Ses projets', 'His projects') },
+                        { label: pick('Ses compétences', 'His skills') }
+                    ]);
+                }
+
+                function ask(question) {
+                    const text = (question || '').trim().slice(0, 300);
+                    if (!text) return;
+                    bubble('me', text);
+                    const found = respond(text);
+                    window.setTimeout(() => {
+                        if (!found) { fallback(); return; }
+                        misses = 0;
+                        bubble('bot', found.text, found.links);
+                        if (found.chips) chips(found.chips); else defaultChips();
+                    }, 260);
+                }
+
+                /* ---- ouverture et fermeture ---- */
+
+                function openPanel() {
+                    panel.classList.add('open');
+                    toggle.classList.add('open', 'seen');
+                    toggle.setAttribute('aria-expanded', 'true');
+                    if (!greeted) {
+                        greeted = true;
+                        bubble('bot', pick(
+                            'Bonjour ! Je suis l’assistant du portfolio. Pose-moi une question sur les projets de Chakib, ses compétences, sa formation ou ses coordonnées.',
+                            'Hello! I am the portfolio assistant. Ask me about Chakib’s projects, his skills, his background or his contact details.'));
+                        defaultChips();
+                    }
+                    window.setTimeout(() => chatInput.focus({ preventScroll: true }), 150);
+                }
+
+                function closePanel() {
+                    panel.classList.remove('open');
+                    toggle.classList.remove('open');
+                    toggle.setAttribute('aria-expanded', 'false');
+                }
+
+                toggle.addEventListener('click', () => {
+                    if (panel.classList.contains('open')) closePanel(); else openPanel();
+                });
+                chatClose.addEventListener('click', closePanel);
+                document.addEventListener('keydown', e => {
+                    if (e.key === 'Escape' && panel.classList.contains('open')) closePanel();
+                });
+                chatForm.addEventListener('submit', e => {
+                    e.preventDefault();
+                    const question = chatInput.value;
+                    chatInput.value = '';
+                    ask(question);
+                });
+            })();
+
             // Reveal animations on scroll
             const revealElements = document.querySelectorAll('.reveal');
             
